@@ -1,5 +1,5 @@
 from spotipy import Spotify
-from spotify_models import Track, Artist, Album, SimplifiedArtist, SimplifiedPlaylist
+from spotify_models import Track, SimplifiedPlaylist
 
 class SpotifyService:
 
@@ -22,7 +22,8 @@ class SpotifyService:
     
     def get_saved_tracks(self) -> list[Track]:
         items = self._get_all(self._client.current_user_saved_tracks)
-        tracks = [Track(**item) for item in items]
+        tracks = [Track(**item["track"]) 
+                  for item in items if item.get("track")]
         return tracks
     
     def get_playlists(self) -> list[SimplifiedPlaylist]:
@@ -35,11 +36,11 @@ class SpotifyService:
         items = self._get_all(
             lambda limit, offset: self._client.playlist_items(
                 playlist_id, 
-                fields="items.track(id,name,artists(name)),next",
                 limit=limit,
                 offset=offset
             ),
             limit=100
         )
-        playlist_tracks = [Track(**item) for item in items]
+        playlist_tracks = [Track(**item["track"]) 
+                           for item in items if item.get("track")]
         return playlist_tracks

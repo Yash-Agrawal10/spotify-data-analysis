@@ -43,10 +43,21 @@ class Album(BaseModel):
     images: list[Image]
     href: HttpUrl
 
+class SimplifiedAlbum(BaseModel):
+    id: str
+    name: str
+    album_type: Literal["album", "single", "compilation"]
+    total_tracks: int = Field(..., ge=0)
+    release_date: str
+    release_date_precision: Literal["year", "month", "day"]
+    artists: list[SimplifiedArtist]
+    images: list[Image]
+    href: HttpUrl
+
 class Track(BaseModel):
     id: str
     name: str
-    album: Album
+    album: SimplifiedAlbum
     artists: list[SimplifiedArtist]
     duration_ms: int = Field(..., ge=0)
     popularity: int = Field(..., ge=0, le=100)
