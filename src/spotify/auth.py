@@ -10,6 +10,14 @@ client_id = os.getenv("SPOTIFY_CLIENT_ID")
 client_secret = os.getenv("SPOTIFY_CLIENT_SECRET")
 redirect_uri = os.getenv("SPOTIFY_REDIRECT_URI")
 data_dir = os.getenv("DATA_DIR")
+for (key, value) in (
+    ("SPOTIFY_CLIENT_ID", client_id),
+    ("SPOTIFY_CLIENT_SECRET", client_secret),
+    ("SPOTIFY_REDIRECT_URI", redirect_uri),
+    ("DATA_DIR", data_dir)
+):
+    if not value:
+        raise RuntimeError(f"Missing {key} env var")
 
 def get_spotify_client(username: str, scope: str = "user-library-read") -> Spotify:
     # Create and validate cache path

@@ -1,5 +1,5 @@
-from spotify_auth import get_spotify_client
-from spotify_service import SpotifyService
+from spotify.auth import get_spotify_client
+from spotify.service import SpotifyService
 
 client = get_spotify_client("yash")
 service = SpotifyService(client)
