@@ -1,5 +1,5 @@
 from spotipy import Spotify
-from models import Track, SimplifiedPlaylist
+from .models import Track, SimplifiedPlaylist
 
 class SpotifyService:
 

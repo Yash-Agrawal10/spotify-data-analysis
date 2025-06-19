@@ -5,9 +5,9 @@ from pathlib import Path
 from typing import Any, Optional
 
 load_dotenv()
-data_path = os.getenv("DATA_PATH")
+data_path = os.getenv("DATA_DIR")
 if not data_path:
-    raise RuntimeError("Missing DATA_PATH env var")
+    raise RuntimeError("Missing DATA_DIR env var")
 data_dir = Path(data_path)
 
 class DataStore:
