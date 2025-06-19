@@ -1,5 +1,5 @@
 from pydantic import BaseModel, HttpUrl, Field, model_validator
-from typing import List, Dict, Literal, Any
+from typing import List, Literal
 
 class Image(BaseModel):
     url: HttpUrl
@@ -17,7 +17,7 @@ class Artist(BaseModel):
 
     @model_validator(mode="before")
     @classmethod
-    def pull_followers(cls, data: Dict[str, Any]) -> Dict[str, Any]:
+    def pull_followers(cls, data):
         raw = data.get("followers")
         if isinstance(raw, dict):
             if not isinstance(raw["total"], int):
