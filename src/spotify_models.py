@@ -1,5 +1,5 @@
 from pydantic import BaseModel, HttpUrl, Field, model_validator
-from typing import List, Literal
+from typing import Literal
 
 class Image(BaseModel):
     url: HttpUrl
@@ -9,10 +9,10 @@ class Image(BaseModel):
 class Artist(BaseModel):
     id: str
     name: str
-    genres: List[str]
+    genres: list[str]
     followers: int = Field(..., ge=0)
     popularity: int = Field(..., ge=0, le=100)
-    images: List[Image]
+    images: list[Image]
     href: HttpUrl
 
     @model_validator(mode="before")
@@ -37,17 +37,28 @@ class Album(BaseModel):
     total_tracks: int = Field(..., ge=0)
     release_date: str
     release_date_precision: Literal["year", "month", "day"]
-    artists: List[SimplifiedArtist]
+    artists: list[SimplifiedArtist]
     label: str
     popularity: int = Field(..., ge=0, le=100)
-    images: List[Image]
+    images: list[Image]
     href: HttpUrl
 
 class Track(BaseModel):
     id: str
     name: str
     album: Album
-    artists: List[SimplifiedArtist]
+    artists: list[SimplifiedArtist]
     duration_ms: int = Field(..., ge=0)
     popularity: int = Field(..., ge=0, le=100)
     href: HttpUrl
+
+class SimplifiedPlaylist(BaseModel):
+    id: str
+    name: str
+    descrption: str = ""
+    public: bool
+    collaborative: bool
+    images: list[Image]
+    href: HttpUrl
+    # owner
+    # tracks
