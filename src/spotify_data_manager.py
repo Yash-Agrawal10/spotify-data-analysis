@@ -1,5 +1,6 @@
 from spotify.service import SpotifyService
 from spotify.models import SimplifiedPlaylist, Track
+from spotify.new_models import SpotifyPlaylist, SpotifyTrack
 from datastore import DataStore
 
 class SpotifyDataManager:
@@ -17,23 +18,23 @@ class SpotifyDataManager:
         self._store.save(key, to_serializable(data))
         return data
     
-    def get_saved_tracks(self, use_cached=True) -> list[Track]:
+    def get_saved_tracks(self, use_cached=True) -> list[SpotifyTrack]:
         return self._get_data("saved-tracks", 
                               self._spotify.get_saved_tracks,
                               lambda tracks: [track.model_dump(mode='json') for track in tracks],
-                              lambda items: [Track(**item) for item in items],
+                              lambda items: [SpotifyTrack(**item) for item in items],
                               use_cached)
 
-    def get_playlists(self, use_cached=True) -> list[SimplifiedPlaylist]:
+    def get_playlist_names_and_ids(self, use_cached=True) -> list[SpotifyPlaylist]:
         return self._get_data("playlists", 
-                              self._spotify.get_playlists, 
+                              self._spotify.get_playlist_names_and_ids, 
                               lambda playlists: [playlist.model_dump(mode='json') for playlist in playlists],
-                              lambda items: [SimplifiedPlaylist(**item) for item in items],
+                              lambda items: [SpotifyPlaylist(**item) for item in items],
                               use_cached)
 
-    def get_playlist_tracks(self, playlist: SimplifiedPlaylist, use_cached=True) -> list[Track]:
+    def get_playlist_tracks(self, playlist: SpotifyPlaylist, use_cached=True) -> SpotifyPlaylist:
         return self._get_data(f"playlist-{playlist.name}-{playlist.id}", 
                               lambda: self._spotify.get_playlist_tracks(playlist),
-                              lambda tracks: [track.model_dump(mode='json') for track in tracks],
-                              lambda items: [Track(**item) for item in items],
+                              lambda playlist: playlist.model_dump(),
+                              lambda item: SpotifyPlaylist(**item),
                               use_cached)

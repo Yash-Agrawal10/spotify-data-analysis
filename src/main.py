@@ -11,8 +11,9 @@ data_manager = SpotifyDataManager(spotify, store)
 liked_songs = data_manager.get_saved_tracks()
 print(liked_songs[0].model_dump_json(indent=2))
 
-playlists = data_manager.get_playlists()
-print(playlists[0].model_dump_json(indent=2))
+playlists_names_and_ids = data_manager.get_playlist_names_and_ids()
+print(playlists_names_and_ids[-1].model_dump_json(indent=2))
 
-playlist_tracks = data_manager.get_playlist_tracks(playlists[0])
-print(playlist_tracks[0].model_dump_json(indent=2))
+playlist = data_manager.get_playlist_tracks(playlists_names_and_ids[-1])
+if playlist.tracks != None:
+    print(playlist.tracks[0])

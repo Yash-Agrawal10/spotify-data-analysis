@@ -1,5 +1,6 @@
 from spotipy import Spotify
 from .models import Track, SimplifiedPlaylist
+from .new_models import SpotifyArtist, SpotifyAlbum, SpotifyTrack, SpotifyPlaylist
 
 class SpotifyService:
 
@@ -20,27 +21,30 @@ class SpotifyService:
             offset += limit
         return items
     
-    def get_saved_tracks(self) -> list[Track]:
+    def get_saved_tracks(self) -> list[SpotifyTrack]:
         items = self._get_all(self._client.current_user_saved_tracks)
-        tracks = [Track(**item["track"]) 
+        print(items[0]["track"])
+        tracks = [SpotifyTrack(**item["track"])
                   for item in items if item.get("track")]
         return tracks
     
-    def get_playlists(self) -> list[SimplifiedPlaylist]:
+    def get_playlist_names_and_ids(self) -> list[SpotifyPlaylist]:
         items = self._get_all(self._client.current_user_playlists)
-        playlists = [SimplifiedPlaylist(**item) for item in items]
+        playlists = []
+        for item in items:
+            del item["tracks"]
+        playlists = [SpotifyPlaylist(**item) for item in items]
         return playlists
 
-    def get_playlist_tracks(self, playlist: SimplifiedPlaylist) -> list[Track]:
-        playlist_id = playlist.id
+    def get_playlist_tracks(self, playlist: SpotifyPlaylist) -> SpotifyPlaylist:
         items = self._get_all(
             lambda limit, offset: self._client.playlist_items(
-                playlist_id, 
+                playlist.id, 
                 limit=limit,
                 offset=offset
             ),
             limit=100
         )
-        playlist_tracks = [Track(**item["track"]) 
+        playlist_tracks = [SpotifyTrack(**item["track"]) 
                            for item in items if item.get("track")]
-        return playlist_tracks
+        return SpotifyPlaylist(id=playlist.id, name=playlist.name, tracks=playlist_tracks)
