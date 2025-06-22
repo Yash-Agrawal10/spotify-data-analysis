@@ -1,6 +1,5 @@
 from spotify.service import SpotifyService
-from spotify.models import SimplifiedPlaylist, Track
-from spotify.new_models import SpotifyPlaylist, SpotifyTrack
+from spotify.models import SpotifyPlaylist, SpotifyTrack
 from datastore import DataStore
 
 class SpotifyDataManager:

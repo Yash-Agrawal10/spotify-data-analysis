@@ -1,6 +1,5 @@
 from spotipy import Spotify
-from .models import Track, SimplifiedPlaylist
-from .new_models import SpotifyArtist, SpotifyAlbum, SpotifyTrack, SpotifyPlaylist
+from .models import SpotifyTrack, SpotifyPlaylist
 
 class SpotifyService:
 
