@@ -45,3 +45,11 @@ class SpotifyDataManager:
         playlist = self._spotify.get_playlist_tracks(playlist)
         self._store.save(key, playlist.model_dump())
         return playlist
+
+    def get_playlists(self, use_cached=True, names_and_ids_key="playlist-names-and-ids", key_prefix="playlist") -> list[SpotifyPlaylist]:
+        playlist_names_and_ids = self.get_playlist_names_and_ids(use_cached, names_and_ids_key)
+        playlists = [self.get_playlist_tracks(playlist, 
+                                              use_cached, 
+                                              f"{key_prefix}-{playlist.name}-{playlist.id}")
+                      for playlist in playlist_names_and_ids]
+        return playlists
