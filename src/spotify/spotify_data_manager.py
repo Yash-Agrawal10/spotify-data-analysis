@@ -7,40 +7,41 @@ class SpotifyDataManager:
     def __init__(self, spotify: SpotifyService, store: DataStore):
         self._spotify = spotify
         self._store = store
-
-    def _get_data(self, key, get_data, to_serializable, from_serializable, use_cached):
-        if use_cached:
-            stored_data = self._store.load(key)
-            if stored_data:
-                return from_serializable(stored_data)
-        data = get_data()
-        self._store.save(key, to_serializable(data))
-        return data
     
-    def get_saved_tracks(self, use_cached=True) -> list[SpotifyTrack]:
-        return self._get_data("saved-tracks", 
-                              self._spotify.get_saved_tracks,
-                              lambda tracks: [track.model_dump(mode='json') for track in tracks],
-                              lambda items: [SpotifyTrack(**item) for item in items],
-                              use_cached)
+    def get_saved_tracks(self, use_cached=True, key="saved-tracks") -> list[SpotifyTrack]:
+        if use_cached:
+            cached = self._store.load(key)
+            if cached:
+                return [SpotifyTrack(**item) for item in cached]
+        tracks = self._spotify.get_saved_tracks()
+        self._store.save(key, [track.model_dump(mode='json') for track in tracks])
+        return tracks
 
-    def get_saved_albums(self, use_cached=True) -> list[SpotifyAlbum]:
-        return self._get_data("saved-albums", 
-                              self._spotify.get_saved_albums,
-                              lambda albums: [album.model_dump(mode='json') for album in albums],
-                              lambda items: [SpotifyAlbum(**item) for item in items],
-                              use_cached)
+    def get_saved_albums(self, use_cached=True, key="saved-albums") -> list[SpotifyAlbum]:
+        if use_cached:
+            cached = self._store.load(key)
+            if cached:
+                return [SpotifyAlbum(**item) for item in cached]
+        albums = self._spotify.get_saved_albums()
+        self._store.save(key, [album.model_dump(mode='json') for album in albums])
+        return albums
 
-    def get_playlist_names_and_ids(self, use_cached=True) -> list[SpotifyPlaylist]:
-        return self._get_data("playlists", 
-                              self._spotify.get_playlist_names_and_ids, 
-                              lambda playlists: [playlist.model_dump(mode='json') for playlist in playlists],
-                              lambda items: [SpotifyPlaylist(**item) for item in items],
-                              use_cached)
+    def get_playlist_names_and_ids(self, use_cached=True, key="playlist-names-and-ids") -> list[SpotifyPlaylist]:
+        if use_cached:
+            cached = self._store.load(key)
+            if cached:
+                return [SpotifyPlaylist(**item) for item in cached]
+        playlists = self._spotify.get_playlist_names_and_ids()
+        self._store.save(key, [playlist.model_dump(mode='json') for playlist in playlists])
+        return playlists
 
-    def get_playlist_tracks(self, playlist: SpotifyPlaylist, use_cached=True) -> SpotifyPlaylist:
-        return self._get_data(f"playlist-{playlist.name}-{playlist.id}", 
-                              lambda: self._spotify.get_playlist_tracks(playlist),
-                              lambda playlist: playlist.model_dump(),
-                              lambda item: SpotifyPlaylist(**item),
-                              use_cached)
+    def get_playlist_tracks(self, playlist: SpotifyPlaylist, use_cached=True, key="") -> SpotifyPlaylist:
+        if key == "":
+            key = f"playlist-{playlist.name}-{playlist.id}"
+        if use_cached:
+            cached = self._store.load(key)
+            if cached:
+                return SpotifyPlaylist(**cached)
+        playlist = self._spotify.get_playlist_tracks(playlist)
+        self._store.save(key, playlist.model_dump())
+        return playlist

@@ -52,3 +52,8 @@ class SpotifyService:
         playlist_tracks = [SpotifyTrack(**item["track"]) 
                            for item in items if item.get("track")]
         return SpotifyPlaylist(id=playlist.id, name=playlist.name, tracks=playlist_tracks)
+
+    def get_playlists(self) -> list[SpotifyPlaylist]:
+        playlist_names_and_ids = self.get_playlist_names_and_ids()
+        playlists = [self.get_playlist_tracks(playlist) for playlist in playlist_names_and_ids]
+        return playlists
