@@ -1,7 +1,7 @@
 from spotify.auth import get_spotify_client
 from spotify.service import SpotifyService
 from datastore import DataStore
-from spotify_data_manager import SpotifyDataManager
+from spotify.spotify_data_manager import SpotifyDataManager
 
 client = get_spotify_client("yash")
 spotify = SpotifyService(client)
