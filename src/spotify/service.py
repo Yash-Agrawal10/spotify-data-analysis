@@ -22,7 +22,7 @@ class SpotifyService:
     
     def get_saved_tracks(self) -> list[SpotifyTrack]:
         items = self._get_all(self._client.current_user_saved_tracks)
-        tracks = [SpotifyTrack(**item)
+        tracks = [SpotifyTrack(**item["track"])
                   for item in items if item.get("track")]
         return tracks
 
