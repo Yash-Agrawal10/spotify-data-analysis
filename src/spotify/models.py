@@ -1,10 +1,6 @@
 from pydantic import BaseModel, model_validator
 from typing import Optional
 
-class SpotifyArtist(BaseModel):
-    id: str
-    name: str
-
 class SpotifyAlbum(BaseModel):
     id: str
     name: str

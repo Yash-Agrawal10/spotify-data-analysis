@@ -12,9 +12,6 @@ saved_tracks = data_manager.get_saved_tracks()
 
 saved_albums = data_manager.get_saved_albums()
 
-saved_artists = data_manager.get_saved_artists()
-print(saved_artists)
-
 playlists_names_and_ids = data_manager.get_playlist_names_and_ids()
 
 playlist = data_manager.get_playlist_tracks(playlists_names_and_ids[-1])

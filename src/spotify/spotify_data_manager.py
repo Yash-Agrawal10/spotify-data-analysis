@@ -1,5 +1,5 @@
 from spotify.service import SpotifyService
-from spotify.models import SpotifyPlaylist, SpotifyTrack, SpotifyArtist, SpotifyAlbum
+from spotify.models import SpotifyPlaylist, SpotifyTrack, SpotifyAlbum
 from datastore import DataStore
 
 class SpotifyDataManager:
@@ -29,13 +29,6 @@ class SpotifyDataManager:
                               self._spotify.get_saved_albums,
                               lambda albums: [album.model_dump(mode='json') for album in albums],
                               lambda items: [SpotifyAlbum(**item) for item in items],
-                              use_cached)
-    
-    def get_saved_artists(self, use_cached=True) -> list[SpotifyArtist]:
-        return self._get_data("saved-artists", 
-                              self._spotify.get_saved_artists,
-                              lambda artists: [artist.model_dump(mode='json') for artist in artists],
-                              lambda items: [SpotifyArtist(**item) for item in items],
                               use_cached)
 
     def get_playlist_names_and_ids(self, use_cached=True) -> list[SpotifyPlaylist]:

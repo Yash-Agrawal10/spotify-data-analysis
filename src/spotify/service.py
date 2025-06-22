@@ -1,5 +1,5 @@
 from spotipy import Spotify
-from .models import SpotifyTrack, SpotifyPlaylist, SpotifyAlbum, SpotifyArtist
+from .models import SpotifyTrack, SpotifyPlaylist, SpotifyAlbum
 
 class SpotifyService:
 
@@ -31,11 +31,6 @@ class SpotifyService:
         albums = [SpotifyAlbum(**item["album"]) 
                   for item in items if item.get("album")]
         return albums
-    
-    def get_saved_artists(self) -> list[SpotifyArtist]:
-        items = []
-        artists = [SpotifyArtist(**item) for item in items]
-        return artists
     
     def get_playlist_names_and_ids(self) -> list[SpotifyPlaylist]:
         items = self._get_all(self._client.current_user_playlists)
